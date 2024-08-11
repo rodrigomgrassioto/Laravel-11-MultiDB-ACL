@@ -31,10 +31,8 @@ foreach (config('tenancy.central_domains') as $domain) {
             // acl
             Route::middleware(['ResouceAuthorization.Auth'])->group(function () {
                 Route::get('tstmid', function () { dd('Aprovado"');})->name('tstmid');
-            }); // acl fim
-
-
-
+                // outras rotas
+            });// acl fim
             // apenas logado fim
         });// auth end
     });
