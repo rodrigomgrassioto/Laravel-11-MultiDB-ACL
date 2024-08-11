@@ -20,7 +20,22 @@ foreach (config('tenancy.central_domains') as $domain) {
         ###############
 
         // auth
-        // criar grupo auth aqui
-        // auth end
+        Route::middleware([
+            'auth:sanctum',
+            config('jetstream.auth_session'),
+            'verified',
+        ])->group(function () {
+            // apenas logado
+                // outras rota
+
+            // acl
+            Route::middleware(['ResouceAuthorization.Auth'])->group(function () {
+                Route::get('tstmid', function () { dd('Aprovado"');})->name('tstmid');
+            }); // acl fim
+
+
+
+            // apenas logado fim
+        });// auth end
     });
 }

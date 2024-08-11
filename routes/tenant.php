@@ -38,13 +38,28 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 
 ])->prefix('api')->group(function () {
+
+    // auth
+    Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
+        // apenas logado
+        // outras rota
+
+        // acl
+        Route::middleware(['ResouceAuthorization.Auth'])->group(function () {
+            Route::get('tstmid-ten', function () { dd('Aprovado tenant');})->name('tstmid.ten');
+        }); // acl fim
+    });// auth end
+
     // api public
     Route::get('/', function () {
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id').
             ' users: '. User::all()
             ;
     });
-
     Route::post('my_login', [AuthController::class, 'login']);
     // api public fim
 });
