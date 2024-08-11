@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\BouthSystem\Auth\AuthController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -25,7 +27,24 @@ Route::middleware([
 ])->group(function () {
     Route::get('/', function () {
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id').
-            ' users: '. \App\Models\User::all()
+            ' users: '. User::all()
             ;
     });
+});
+
+Route::middleware([
+    'api',
+    InitializeTenancyBySubdomain::class,
+    PreventAccessFromCentralDomains::class,
+
+])->prefix('api')->group(function () {
+    // api public
+    Route::get('/', function () {
+        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id').
+            ' users: '. User::all()
+            ;
+    });
+
+    Route::post('my_login', [AuthController::class, 'login']);
+    // api public fim
 });
